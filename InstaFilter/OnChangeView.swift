@@ -1,14 +1,13 @@
 //
-//  ContentView.swift
+//  OnChangeView.swift
 //  InstaFilter
 //
-//  Created by Peter Molnar on 10/04/2022.
+//  Created by Peter Molnar on 14/04/2022.
 //
 
 import SwiftUI
 
-struct ContentView: View {
-    
+struct OnChangeView: View {
     @State private var blurAmount = 0.0
     
     var body: some View {
@@ -29,8 +28,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct OnChangeView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        OnChangeView()
     }
 }
