@@ -6,26 +6,91 @@
 //
 
 import SwiftUI
+import CoreImage
+import CoreImage.CIFilterBuiltins
 
 struct ContentView: View {
     
-    @State private var blurAmount = 0.0
+    @State private var image: Image?
     
     var body: some View {
         VStack {
-            Text("Hello, world!")
-                .blur(radius: blurAmount)
-            
-            Slider(value: $blurAmount, in: 1...20)
-                .onChange(of: blurAmount) { newBlurAmount in
-                    print("Blur amount: \(newBlurAmount)")
-                }
-            
-            Button("Random blur")  {
-                blurAmount = Double.random(in: 1...20)
-            }
+            image?
+                .resizable()
+                .scaledToFit()
         }
-      
+        .onAppear {
+            loadImage()
+        }
+    }
+    
+    func loadImage() {
+        guard let inputImage = UIImage(named: "Example") else { return }
+        let beginImage = CIImage(image: inputImage)
+        
+        let context = CIContext()
+        let currentFilter = CIFilter.twirlDistortion()
+        
+        currentFilter.inputImage = beginImage
+        // To make the filter setup flexible:
+        
+        let amount = 1.0
+        
+        let inputKeys = currentFilter.inputKeys
+        
+        if inputKeys.contains(kCIInputIntensityKey) { currentFilter.setValue(amount, forKey: kCIInputIntensityKey)}
+        if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(amount * 200, forKey: kCIInputRadiusKey)}
+        if inputKeys.contains(kCIInputScaleKey) {currentFilter.setValue(amount * 10, forKey: kCIInputScaleKey) }
+        currentFilter.center = CGPoint(x: inputImage.size.width / 2, y: inputImage.size.height / 2)
+
+        // Get a CIImage (Image recipe) from the filter. It might fail:
+        guard let outputImage = currentFilter.outputImage else { return }
+        
+        // Attempt to get a CGIMage from the CIImage. Might fail.
+        if let cgimg = context.createCGImage(outputImage, from: outputImage.extent) {
+            // Convert to UIImage
+            let uiImage = UIImage(cgImage: cgimg)
+            
+            // Then back to SwiftUI Image :O
+            image = Image(uiImage: uiImage)
+        }
+    }
+    
+    private func makeSepiaFilter(beginImage: CIImage?) -> CIFilter {
+        let currentFilter = CIFilter.sepiaTone()
+        
+        currentFilter.inputImage = beginImage
+        currentFilter.intensity = 1
+        
+        return currentFilter
+    }
+    
+    private func makePixelateFilter(beginImage: CIImage?) -> CIFilter {
+        let currentFilter = CIFilter.pixellate()
+        
+        currentFilter.inputImage = beginImage
+        currentFilter.scale = 100
+        
+        return currentFilter
+    }
+    
+    private func makeCrystallizeFilter(beginImage: CIImage?) -> CIFilter {
+        let currentFilter = CIFilter.crystallize()
+        
+        currentFilter.inputImage = beginImage
+        currentFilter.radius = 200
+        
+        return currentFilter
+    }
+    
+    private func makeTwirlDistortionFilter(beginImage: CIImage?) -> CIFilter {
+        let currentFilter = CIFilter.twirlDistortion()
+        
+        currentFilter.inputImage = beginImage
+        currentFilter.radius = 1000
+        currentFilter.center = CGPoint(x: (beginImage?.extent.width ?? 100) / 2, y: (beginImage?.extent.height ?? 100) / 2)
+        
+        return currentFilter
     }
 }
 
