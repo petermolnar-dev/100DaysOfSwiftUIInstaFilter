@@ -6,21 +6,44 @@
 //
 
 import SwiftUI
+import PhotosUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
+
+struct ImagePicker: UIViewControllerRepresentable {
+    
+    typealias UIViewControllerType = PHPickerViewController
+    
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        
+        let picker = PHPickerViewController(configuration: config)
+        
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {
+    }
+    
+}
 
 struct ContentView: View {
     
     @State private var image: Image?
+    @State private var showImagePicker = false
     
     var body: some View {
         VStack {
             image?
                 .resizable()
                 .scaledToFit()
+            Button("Select image") {
+                showImagePicker = true
+            }
         }
-        .onAppear {
-            loadImage()
+        .sheet(isPresented: $showImagePicker) {
+            ImagePicker()
         }
     }
     
@@ -42,7 +65,7 @@ struct ContentView: View {
         if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(amount * 200, forKey: kCIInputRadiusKey)}
         if inputKeys.contains(kCIInputScaleKey) {currentFilter.setValue(amount * 10, forKey: kCIInputScaleKey) }
         currentFilter.center = CGPoint(x: inputImage.size.width / 2, y: inputImage.size.height / 2)
-
+        
         // Get a CIImage (Image recipe) from the filter. It might fail:
         guard let outputImage = currentFilter.outputImage else { return }
         
