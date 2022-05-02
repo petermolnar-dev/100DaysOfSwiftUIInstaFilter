@@ -14,6 +14,7 @@
 		C7BB1E192803370D006367F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7BB1E182803370D006367F0 /* Assets.xcassets */; };
 		C7BB1E1C2803370D006367F0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7BB1E1B2803370D006367F0 /* Preview Assets.xcassets */; };
 		C7D8EFD1281C645000094708 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D8EFD0281C645000094708 /* ImagePicker.swift */; };
+		C7D8EFD32820528600094708 /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D8EFD22820528600094708 /* ImageSaver.swift */; };
 		C7E45E03281C5CE9009BA6A6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E45E02281C5CE9009BA6A6 /* ContentView.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,7 @@
 		C7BB1E182803370D006367F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C7BB1E1B2803370D006367F0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C7D8EFD0281C645000094708 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		C7D8EFD22820528600094708 /* ImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaver.swift; sourceTree = "<group>"; };
 		C7E45E02281C5CE9009BA6A6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,6 +63,7 @@
 			children = (
 				C7BB1E142803370B006367F0 /* InstaFilterApp.swift */,
 				C7BB1E162803370B006367F0 /* ContentViewPlayground.swift */,
+				C7D8EFD22820528600094708 /* ImageSaver.swift */,
 				C7E45E02281C5CE9009BA6A6 /* ContentView.swift */,
 				C7D8EFD0281C645000094708 /* ImagePicker.swift */,
 				C70ABFF22808955400697CDC /* OnChangeView.swift */,
@@ -152,6 +155,7 @@
 				C7BB1E172803370B006367F0 /* ContentViewPlayground.swift in Sources */,
 				C7E45E03281C5CE9009BA6A6 /* ContentView.swift in Sources */,
 				C70ABFF32808955500697CDC /* OnChangeView.swift in Sources */,
+				C7D8EFD32820528600094708 /* ImageSaver.swift in Sources */,
 				C7D8EFD1281C645000094708 /* ImagePicker.swift in Sources */,
 				C70ABFF52808957900697CDC /* ShowConfirmationView.swift in Sources */,
 				C7BB1E152803370B006367F0 /* InstaFilterApp.swift in Sources */,
