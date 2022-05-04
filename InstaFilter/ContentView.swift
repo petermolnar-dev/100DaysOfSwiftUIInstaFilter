@@ -9,14 +9,28 @@ import SwiftUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
 
+enum ViewVisibility: CaseIterable {
+    case visible, // view is fully visible
+         invisible, // view is hidden but takes up space
+         gone // view is fully removed from the view hierarchy
+}
+
 struct ContentView: View {
     
     @State private var image: Image?
     @State private var filterIntensity = 0.5
+    @State private var filterRadius = 100.0
+    @State private var filterScale = 10.0
+    
+    
     
     @State private var showingImagePicker = false
     @State private var inputImage: UIImage?
     @State private var showingFilterSheet = false
+    
+    @State private var showIntensity: ViewVisibility = .gone
+    @State private var showRadius: ViewVisibility = .gone
+    @State private var showScale: ViewVisibility = .gone
     
     @State private var processedImage: UIImage?
     
@@ -38,7 +52,7 @@ struct ContentView: View {
                         .scaledToFit()
                 }
                 .onTapGesture {
-                   showingImagePicker = true
+                    showingImagePicker = true
                 }
                 
                 HStack {
@@ -47,8 +61,36 @@ struct ContentView: View {
                         .onChange(of: filterIntensity) { _ in
                             applyProcessing()
                         }
+                        .disabled(inputImage == nil)
+                        .id(inputImage)
+                    
                 }
                 .padding(.vertical)
+                .visibility(showIntensity)
+                
+                HStack {
+                    Text("Radius")
+                    Slider(value: $filterRadius)
+                        .onChange(of: filterRadius) { _ in
+                            applyProcessing()
+                        }
+                        .disabled(inputImage == nil)
+                        .id(inputImage)
+                }
+                .padding(.vertical)
+                .visibility(showRadius)
+                
+                HStack {
+                    Text("Scale")
+                    Slider(value: $filterScale)
+                        .onChange(of: filterScale) { _ in
+                            applyProcessing()
+                        }
+                        .disabled(inputImage == nil)
+                        .id(inputImage)
+                }
+                .padding(.vertical)
+                .visibility(showScale)
                 
                 HStack {
                     Button("Change Filter") {
@@ -58,6 +100,7 @@ struct ContentView: View {
                     Spacer()
                     
                     Button("Save", action: save)
+                        .disabled(inputImage == nil)
                 }
             }
         }
@@ -116,11 +159,37 @@ struct ContentView: View {
     
     func applyProcessing() {
         let inputKeys = currentFilter.inputKeys
-        print(" ** \(type(of: currentFilter)) has input keys\(inputKeys)")
         
-        if inputKeys.contains(kCIInputIntensityKey) { currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey) }
-        if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey) }
-        if inputKeys.contains(kCIInputScaleKey) { currentFilter.setValue(filterIntensity * 10, forKey: kCIInputScaleKey) }
+        if inputKeys.contains(kCIInputIntensityKey) {
+            currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey)
+            withAnimation(Animation.easeInOut(duration: 0.5)) {
+                showIntensity = .visible
+            }
+        } else {
+            withAnimation(Animation.easeInOut(duration: 0.5)) {
+                showIntensity = .gone
+            }
+        }
+        if inputKeys.contains(kCIInputRadiusKey) {
+            currentFilter.setValue(filterRadius, forKey: kCIInputRadiusKey)
+            withAnimation(Animation.easeInOut(duration: 0.5)) {
+                showRadius = .visible
+            }
+        } else {
+            withAnimation(Animation.easeInOut(duration: 0.5)) {
+                showRadius = .gone
+            }
+        }
+        if inputKeys.contains(kCIInputScaleKey) {
+            currentFilter.setValue(filterScale * 10, forKey: kCIInputScaleKey)
+            withAnimation(Animation.easeInOut(duration: 0.5)) {
+                showScale = .visible
+            }
+        } else {
+            withAnimation(Animation.easeInOut(duration: 0.5)) {
+                showScale = .gone
+            }
+        }
         
         guard let outputImage = currentFilter.outputImage else { return }
         
@@ -128,6 +197,19 @@ struct ContentView: View {
             let uiImage = UIImage(cgImage: cgimg)
             image = Image(uiImage: uiImage)
             processedImage = uiImage
+        }
+    }
+}
+
+
+extension View {
+    @ViewBuilder func visibility(_ visibility: ViewVisibility) -> some View {
+        if visibility != .gone {
+            if visibility == .visible {
+                self
+            } else {
+                hidden()
+            }
         }
     }
 }
